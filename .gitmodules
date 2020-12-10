@@ -1,6 +1,3 @@
 [submodule "contracts/dependencies/reth-token"]
 	path = contracts/dependencies/reth-token
 	url = git@github.com:Mimir-Solutions/reth-token.git
-[submodule "contracts/dependencies/renascent-token"]
-	path = contracts/dependencies/renascent-token
-	url = git@github.com:Mimir-Solutions/renascent-token.git
