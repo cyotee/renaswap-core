@@ -1,9 +1,10 @@
 pragma solidity =0.5.16;
 
-import './interfaces/IRenawapV1Factory.sol';
+import './interfaces/IRenaswapV1Factory.sol';
+import './interfaces/IRenaswapV1Pair.sol';
 import './RenaswapV1Pair.sol';
 
-contract RenaswapV1Factory is IRenawapV1Factory {
+contract RenaswapV1Factory is IRenaswapV1Factory {
     address public feeTo;
     address public feeToSetter;
 
@@ -31,7 +32,7 @@ contract RenaswapV1Factory is IRenawapV1Factory {
         assembly {
             pair := create2(0, add(bytecode, 32), mload(bytecode), salt)
         }
-        IRenawapV1Pair(pair).initialize(token0, token1, tokenBID);
+        IRenaswapV1Pair(pair).initialize(token0, token1, tokenBID);
         getPair[token0][token1] = pair;
         getPair[token1][token0] = pair; // populate mapping in the reverse direction
         allPairs.push(pair);

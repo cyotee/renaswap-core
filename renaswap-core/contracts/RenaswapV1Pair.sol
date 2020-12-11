@@ -5,11 +5,11 @@ import './UniswapV2ERC20.sol';
 import './libraries/Math.sol';
 import './libraries/UQ112x112.sol';
 import './interfaces/IERC20.sol';
+import './interfaces/IERC1155.sol';
 import './interfaces/IRenaswapV1Factory.sol';
-import './interfaces/IRenaswapV1Callee.sol';
 import './ERC1155Holder.sol';
 
-contract RenaswapV2Pair is IRenaswapV1Pair, UniswapV2ERC20, ERC1155Holder {
+contract RenaswapV1Pair is IRenaswapV1Pair, UniswapV2ERC20, ERC1155Holder {
     using SafeMath  for uint;
     using UQ112x112 for uint224;
 
@@ -155,7 +155,7 @@ contract RenaswapV2Pair is IRenaswapV1Pair, UniswapV2ERC20, ERC1155Holder {
         require(amount0 > 0 && amount1 > 0, 'RenaswapV1: INSUFFICIENT_LIQUIDITY_BURNED');
         _burn(address(this), liquidity);
         _safeTransfer(to, amount0);
-        _safeTransfer1155(to, amount1, token1ID);
+        _safeTransfer1155(to, amount1);
         balance0 = IERC20(_token0).balanceOf(address(this));
         balance1 = IERC1155(_token1).balanceOf(address(this), token1ID);
 
@@ -179,7 +179,7 @@ contract RenaswapV2Pair is IRenaswapV1Pair, UniswapV2ERC20, ERC1155Holder {
         require(to != _token0 && to != _token1, 'RenaswapV1: INVALID_TO');
         if (amount0Out > 0) _safeTransfer(to, amount0Out); // optimistically transfer tokens
         //Disable selling into the pair.
-        //if (amount1Out > 0) _safeTransfer1155(to, amount1Out, token1ID); // optimistically transfer tokens
+        //if (amount1Out > 0) _safeTransfer1155(to, amount1Out); // optimistically transfer tokens
         //if (data.length > 0) IRenaswapV2Callee(to).RenaswapV2Call(msg.sender, amount0Out, amount1Out, data);
         balance0 = IERC20(_token0).balanceOf(address(this));
         balance1 = IERC1155(_token1).balanceOf(address(this), token1ID);
@@ -202,7 +202,7 @@ contract RenaswapV2Pair is IRenaswapV1Pair, UniswapV2ERC20, ERC1155Holder {
     function skim(address to) external lock {
         address _token0 = token0; // gas savings
         address _token1 = token1; // gas savings
-        _safeTransfer(_token0, to, IERC20(_token0).balanceOf(address(this)).sub(reserve0));
+        _safeTransfer(to, IERC20(_token0).balanceOf(address(this)).sub(reserve0));
         //_safeTransfer1155(_token1, to, IERC1155(_token1).balanceOf(address(this), token1ID).sub(reserve1));
         _update(IERC20(token0).balanceOf(address(this)), IERC1155(token1).balanceOf(address(this), token1ID), reserve0, reserve1);
     }
